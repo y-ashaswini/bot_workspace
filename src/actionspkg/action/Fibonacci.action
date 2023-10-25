@@ -1,0 +1,8 @@
+# define goal
+int32 order
+---
+# define result
+int32[] sequence
+---
+# define feedback - intermediate message
+int32[] sequence

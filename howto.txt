@@ -1,0 +1,108 @@
+# create package
+
+> directory_name
+>> src
+>>> package_name
+
+# write command + list dependenies
+catkin_create_pkg std_msgs roscpp
+
+# edit package.xml, CMakeLists.txt
+
+> package_name
+>> src
+>>> file_one.cpp
+>>> file_two.cpp
+>> msgs
+>>> message_name.msg
+
+----------------------------------------------------------------
+
+# Run robot with presaved configurations in rviz and gazebo
+
+source /devel/setup.bash
+roscore
+
+roslauch fourbot world.launch
+# launches both rviz and gaezbo (how to reopen saved rviz config)
+
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/fourbot/cmd_vel
+# control on robot movement on gazebo
+
+
+# Topics published 
+
+MISC
+/clicked_point
+/clock
+
+CAMERA
+/fourbot/camera/parameter_descriptions
+/fourbot/camera/parameter_updates
+/fourbot/camera/rgb/camera_info
+/fourbot/camera/rgb/image_raw
+/fourbot/camera/rgb/image_raw/compressed
+/fourbot/camera/rgb/image_raw/compressed/parameter_descriptions
+/fourbot/camera/rgb/image_raw/compressed/parameter_updates
+/fourbot/camera/rgb/image_raw/compressedDepth
+/fourbot/camera/rgb/image_raw/compressedDepth/parameter_descriptions
+/fourbot/camera/rgb/image_raw/compressedDepth/parameter_updates
+/fourbot/camera/rgb/image_raw/theora
+/fourbot/camera/rgb/image_raw/theora/parameter_descriptions
+/fourbot/camera/rgb/image_raw/theora/parameter_updates
+/fourbot/cmd_vel
+/fourbot/odom
+
+GAZEBO
+/gazebo/link_states
+/gazebo/model_states
+/gazebo/parameter_descriptions
+/gazebo/parameter_updates
+/gazebo/performance_metrics
+/gazebo/set_link_state
+/gazebo/set_model_state
+
+ODOM
+/initialpose
+/joint_states
+/move_base_simple/goal
+
+/rosout
+/rosout_agg
+/tf
+/tf_static
+
+
+
+
+roslaunch vision color_detection_publisher.launch
+rostopic list (you'll see webcam)
+rostopic info /webcam (you'll see Image type, etc.)
+rqt_image_view (switch to topic /webcam)
+
+
+
+To add a plugin:
+1) Add plugin code to packagename.gazebo within the <gazebo></gazebo> tags 
+2) add link + joint to packagename.xacro [include it in the structure]
+
+After adding depth sensor, topics published:
+
+/depthcam/color/camera_info
+/depthcam/color/image_raw ------------------
+/depthcam/color/image_raw/compressed
+/depthcam/color/image_raw/compressed/parameter_descriptions
+/depthcam/color/image_raw/compressed/parameter_updates
+/depthcam/color/image_raw/compressedDepth
+/depthcam/color/image_raw/compressedDepth/parameter_descriptions
+/depthcam/color/image_raw/compressedDepth/parameter_updates
+/depthcam/color/image_raw/theora
+/depthcam/color/image_raw/theora/parameter_descriptions
+/depthcam/color/image_raw/theora/parameter_updates
+/depthcam/depth/camera_info
+/depthcam/depth/image_raw
+/depthcam/depth/points ------------------
+/depthcam_ir/depth/camera_info
+/depthcam_ir/parameter_descriptions
+/depthcam_ir/parameter_updates
+
