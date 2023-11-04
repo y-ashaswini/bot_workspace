@@ -39,7 +39,19 @@ class image_converter:
 
     try:
       self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "32FC1"))
+      
+      # Find avg depth of all pixels in a box around the center, width : rows/3 and height : cols/3
+      # avg_depth = 0
+      # no_pixels = 0
+      # for i in range(int(rows/3), int(2*rows/3)):
+      #   for j in range(int(cols/3), int(2*cols/3)):
+      #     avg_depth = avg_depth + cv_image[i][j]
+      #     no_pixels +=1
+      # print("counted "+str(no_pixels)+" pixels")
+      # self.dist_pub.publish(str(avg_depth/no_pixels))
+
       self.dist_pub.publish(str(cv_image[int(rows/2)][int(cols/2)]))
+    
     except CvBridgeError as e:
       print(e)
 

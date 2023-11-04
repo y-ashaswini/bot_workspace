@@ -3,7 +3,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
-import time
+from time import sleep
 
 class Movement():
     def __init__(self):
@@ -11,18 +11,57 @@ class Movement():
         self.vel_pub = rospy.Publisher('/fourbot/cmd_vel', Twist, queue_size=1)
         
         self.too_close = False
+        self.collided = False
 
         self.forward_distance_sub = rospy.Subscriber("depthcam/color/distance_opencv",String ,self.distanceCallback)
         self.command = Twist()
         self.rate = rospy.Rate(10)
         self.end = False
         rospy.on_shutdown(self.shutdownhook)
+    
 
+
+    def collisionRecovery(self):
+        if(self.collided == True):
+            t0 = rospy.Time.now().secs
+            t1 = t0
+
+            print("current vel: "+str(self.command.linear.x)+", "+str(self.command.linear.y))
+            self.command.linear.y = self.command.linear.y*-1
+            self.command.linear.x = self.command.linear.x*-1
+            original_angular_vel = self.command.angular.z
+            self.command.angular.z = -0.5
+
+            print("after collision vel: "+str(self.command.linear.x)+", "+str(self.command.linear.y))
+
+            while(t1 - t0 < 2):
+                print("in recovery loop for seconds:",t1-t0)
+                t1 = rospy.Time.now().secs
+                self.vel_pub.publish(self.command)  
+                self.rate.sleep()
+            
+            self.command.linear.y = self.command.linear.y*-1
+            self.command.linear.x = self.command.linear.x*-1
+            self.command.angular.z = original_angular_vel
+            print("back to vel: "+str(self.command.linear.x)+", "+str(self.command.linear.y))
+            self.collided = False
+
+
+    def checkCollision(self, data):
+        if(data == 'nan'):
+            print("collided bro")
+            self.collided = True
+            
 
     def distanceCallback(self, data):
-        if(data < 1.8):
-            self.too_close = True
-            self.rotate()
+        if self.collided == False:
+            self.checkCollision(data.data)
+            if(data.data < '1.5'):
+                self.too_close = True
+            else:
+                self.too_close = False
+        else:
+            pass
 
 
     def publish_cmdvel(self):
@@ -41,26 +80,27 @@ class Movement():
         self.stop_rover()
         self.end = True
 
-
-
     def stop_rover(self):
         rospy.loginfo("Shutting down rover!")
         self.command.linear.x = 0.0 # no linear movement
         self.command.linear.y = 0.0 
         self.command.linear.z = 0.0 
+        
+        self.rate.sleep()
+        
         # self.command.angular.x = 0.0
         # self.command.angular.y = 0.0
-        self.command.angular.z = self.command.angular.z*-1 # no angular movement
+        
+        self.command.angular.z = 0 # no angular movement
+        
         self.publish_cmdvel() # trigger shutdown
 
-    
     def convert_degree_rad(self, angular_speed_deg, angle_deg):
         angular_speed_rad = angular_speed_deg * 3.14 / 180
         angle_rad = angle_deg * 3.14 / 180
         return [angular_speed_rad, angle_rad]
 
-
-    def forward_step(self, forward_time = 10):
+    def forward_step(self, forward_time = 5):
         self.command.linear.x = 5
         self.command.linear.y = 2
 
@@ -71,22 +111,33 @@ class Movement():
             t1 = rospy.Time.now().secs
             self.rate.sleep()
 
+    def backward_step(self, backward_time = 5):
+        self.command.linear.x = -5
+        self.command.linear.y = -2
+
+        t0 = rospy.Time.now().secs
+        t1 = t0
+        while(t1 - t0 < backward_time):
+            self.vel_pub.publish(self.command)            
+            t1 = rospy.Time.now().secs
+            self.rate.sleep()    
+
 
     def forward_continuous(self):
-        self.command.linear.x = 5
-        self.command.linear.y = 2
 
-        while not self.too_close:
+        while not self.too_close and not self.collided:
+        # while not self.collided:
             self.vel_pub.publish(self.command)
-            self.rate.sleep()
-
+            self.rate.sleep()    
 
 
     def rotate(self, angular_speed_deg =30, angle_deg = 30, clockwise = False):
         self.angular_speed_deg = angular_speed_deg
         self.angle_deg = angle_deg
         self.clockwise = clockwise
-
+        linear_x = self.command.linear.x
+        linear_y = self.command.linear.y
+        linear_z = self.command.linear.z
         self.command.linear.x = 0
         self.command.linear.y = 0
         self.command.linear.z = 0
@@ -99,38 +150,56 @@ class Movement():
         else:
             self.command.angular.z = abs(angular_speed_rad)
 
-        # t0 = current time
         t0 = rospy.Time.now().secs
 
         curr_angle = 0
         
         # loop to publish the velocity estimate, current_distance = velocity * (t1 - t0)
         while(curr_angle < angle_rad):
-            
-            # Publish the velocity
             self.vel_pub.publish(self.command)
-            
-            # t1 is the current time
             t1 = rospy.Time.now().secs
-            
-            # Calculate current angle
             curr_angle = angular_speed_rad*(t1 - t0)
 
             self.rate.sleep()
-
+        
+        self.command.angular.z = 0
+        self.command.linear.x = linear_x
+        self.command.linear.y = linear_y
+        self.command.linear.z = linear_z
+        
         # after taking a turn, set velocity to zero to stop the robot
-        self.stop_rover()
+        # self.stop_rover()
+
+
+def wrapper():
+    controller = Movement()
+    controller.command.linear.x = 5
+    controller.command.linear.y = 2
+
+    while not controller.end:
+        while not controller.too_close and not controller.collided:
+            controller.forward_continuous()
+
+        if controller.collided:
+            controller.collisionRecovery()
+            controller.forward_continuous()
+
+        elif controller.too_close:
+            print("too close, from forward continuous")
+            controller.rotate(angle_deg = 60)
+            sleep(3)
+            controller.forward_continuous()
+        else:
+            print("anomally end")
+            controller.end = True
+    
+    controller.stop_rover()
 
 
 if __name__ == '__main__':
-    rover_controller_obj = Movement()
     try:
-        rover_controller_obj.forward_continuous()
-        rover_controller_obj.stop_rover()
+        wrapper()        
 
     except rospy.ROSInterruptException:
         pass
-
-
-
 
