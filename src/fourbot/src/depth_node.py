@@ -39,7 +39,7 @@ class image_converter:
 
     try:
       self.image_pub.publish(self.bridge.cv2_to_imgmsg(cv_image, "32FC1"))
-      self.dist_pub.publish(cv_image[int(rows/2)][int(cols/2)])
+      self.dist_pub.publish(str(cv_image[int(rows/2)][int(cols/2)]))
     except CvBridgeError as e:
       print(e)
 

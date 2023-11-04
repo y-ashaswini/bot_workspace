@@ -159,7 +159,7 @@
 
 
   <!-- GPS Sensor -->
-  <gazebo>      
+  <!-- <gazebo>      
     <controller:hector_gazebo_ros_gps name="quadrotor_gps_sim" plugin="libhector_gazebo_ros_test.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>4.0</updateRate>
@@ -170,9 +170,8 @@
       <gaussianNoise>0.1 0.1 0.1</gaussianNoise>
       <velocityDrift>0 0 0</velocityDrift>
       <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
-      <!--interface:position name="gps_position"/-->
     </controller:hector_gazebo_ros_gps>
-  </gazebo>
+  </gazebo> -->
 
 
 </robot>

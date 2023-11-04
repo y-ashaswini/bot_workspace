@@ -106,3 +106,9 @@ After adding depth sensor, topics published:
 /depthcam_ir/parameter_descriptions
 /depthcam_ir/parameter_updates
 
+
+
+
+roslaunch fourbot rviz_gazebo.launch
+rosrun fourbot depth_node.py -- publishes distance from center of camera frame 
+rosrun fourbot movement.py -- moves forward, turns anticlockwise 30 deg (default) if distance < 1.8 units

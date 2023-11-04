@@ -4,8 +4,6 @@ import rospy
 import cv2
 import numpy as np
 from std_msgs.msg import String
-import time
-import math
 
 
 cap = cv2.VideoCapture(0)
