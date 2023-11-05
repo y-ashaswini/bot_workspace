@@ -9,7 +9,6 @@ import math
     
 cap = cv2.VideoCapture(0)
 
-
 def talker():
     rospy.init_node('arrow', anonymous=True)
     # pub = rospy.Publisher('/arrow', String, queue_size=1)

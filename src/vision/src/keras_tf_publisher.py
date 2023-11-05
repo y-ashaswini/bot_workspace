@@ -3,33 +3,61 @@
 import rospy
 import cv2
 import numpy as np
-from std_msgs.msg import String
 import matplotlib.pyplot as plt
 from tensorflow import keras
 
-model = keras.models.load_model("src/vision/Model")
-cap = cv2.VideoCapture(0)
+from std_msgs.msg import String
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge, CvBridgeError
+
+model = keras.models.load_model("/home/alexii/robotics/onebot_ws/src/vision/Model")
 
 def array2dir(array):
     if array[0][0] > array[0][1] and array[0][0] > array[0][2]:
-        print("Right")
+        return "right"
     elif array[0][1] > array[0][0] and array[0][1] > array[0][2]:
-        print("Left")
+        return "left"
     elif array[0][2] > array[0][1] and array[0][2] > array[0][0]:
-        print("Up")
+        return "up"
     else:
-        print("HATA!")
+        return "x"
+
+class camera1:
+    def __init__(self):
+        self.img_subscriber = rospy.Subscriber("/depthcam/color/image_raw", Image, self.img_sub_callback)
+        self.direction_publisher = rospy.Publisher("/arrow", String, queue_size=1)
+        self.external_q = []
+
+    def decideDirection(self, q):
+        # q = [r, r, r, r, l, l, u, u]
+        # direction = r
+        d = {'l': 0, 'r': 0}
+        for i in q:
+            if i != 'u':
+                d[i]+=1
+        
+        max_num = 0
+        max_dir = 'x'
+        for dir, num in d.items():
+            if(num >= max_num):
+                max_no = num
+                max_dir = dir
+        
+        print("direction is "+max_dir)
+        return max_dir
 
 
-def talker():
-    rospy.init_node('arrow', anonymous=True)
+    def img_sub_callback(self, data):
+        bridge = CvBridge()
+        
+        try:
+            cv_img = bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
+        except CvBridgeError as e:
+            rospy.logerr(e)
 
-    while not rospy.is_shutdown():
-        ret, img = cap.read()
-        if not ret:
-            break
-    
-        cv2.imshow('Camera', img)
+        img = cv_img
+
+        # cv2.imshow('ArrowCamera', img)
 
         img = cv2.resize(img, (224, 224))
 
@@ -37,24 +65,35 @@ def talker():
         plt.imshow(img)
         img = np.expand_dims(img, axis=0)
         output = model.predict(img)
-        # print(output)
-        array2dir(output)
+        curr_dir = array2dir(output)
+        print("direction:",curr_dir)
+        self.direction_publisher.publish(curr_dir)
+        
+        # self.external_q.append(curr_dir)
+
+        # if(len(self.external_q) == 50):
+        #     direction = self.decideDirection(self.external_q)
+        #     self.direction_publisher.publish(direction)
+        #     self.external_q = []
+
+        cv2.waitKey(3)
 
 
-        # press esc to exit
-        key = cv2.waitKey(1)
-        if (key == 27):
-            break
-
-
-        if rospy.is_shutdown():
-            cap.release()
-            cv2.destroyAllWindows()
-
+def main():
+    camera1()
+        
+    try:
+        rospy.spin()
+    except KeyboardInterrupt:
+        rospy.loginfo("Shutting down")
+    
+    cv2.destroyAllWindows()
+    
 
 
 if __name__ == "__main__":
     try:
-        talker()
+        rospy.init_node('arrow', anonymous=True)
+        main()
     except rospy.ROSInterruptException:
         pass

@@ -5,7 +5,7 @@ from tensorflow import keras
 import cv2
 
 # Load your model
-model = keras.models.load_model("../Model")
+model = keras.models.load_model("/home/alexii/robotics/onebot_ws/src/vision/Model")
 
 def array2dir(array):
     if array[0][0] > array[0][1] and array[0][0] > array[0][2]:
