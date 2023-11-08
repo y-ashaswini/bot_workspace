@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <launch>
+	
 	<!-- Robot pose -->
 	<arg name="x" default="0" />
 	<arg name="y" default="0" />
@@ -14,8 +15,9 @@
 	<include file="$(find fourbot)/launch/robot_description.launch" />
 
 	<!-- World File -->
-	<!-- <arg name="world_file" default="$(find fourbot)/worlds/empty.world" /> -->
-	<arg name="world_file" default="$(find fourbot)/worlds/arrows.world" />
+	<arg name="world_file" default="$(find fourbot)/worlds/empty.world" />
+	<!-- <arg name="world_file" default="$(find fourbot)/worlds/arrows.world" /> -->
+	
 
 	<!-- Launch Gazebo World -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -35,8 +37,11 @@
 
 	<!--launch rviz-->
 	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
-		args="-d $(find fourbot)/worlds/rviz_config_depth.rviz" />
+		args="-d $(find fourbot)/worlds/ouster_lidar.rviz" />	
+
+	<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" /> -->
 
 	<!-- rviz_config.rviz -->
 	<!-- rviz_config_depth.rviz -->
+	<!-- ouster_lidar.rviz -->
 </launch>

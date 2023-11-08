@@ -50,8 +50,6 @@ CAMERA
 /fourbot/camera/rgb/image_raw/theora
 /fourbot/camera/rgb/image_raw/theora/parameter_descriptions
 /fourbot/camera/rgb/image_raw/theora/parameter_updates
-/fourbot/cmd_vel
-/fourbot/odom
 
 GAZEBO
 /gazebo/link_states
@@ -63,9 +61,12 @@ GAZEBO
 /gazebo/set_model_state
 
 ODOM
+/fourbot/cmd_vel
+/fourbot/odom
 /initialpose
 /joint_states
 /move_base_simple/goal
+/imu ------------------
 
 /rosout
 /rosout_agg
@@ -107,8 +108,50 @@ After adding depth sensor, topics published:
 /depthcam_ir/parameter_updates
 
 
+SCRIPTS TO RUN FOR TRAVERSAL
+
+>>> roslaunch fourbot rviz_gazebo.launch
+>>> rosrun vision depth_node.py (depthcam/color/distance_opencv -- publishes distance from center of camera frame )
+>>> rosrun vision fake_arrow.py -- detects arrow and publishes direction (hard coded currently)
+>>> rosrun fourbot movement_depth.py -- moves forward, turns anticlockwise 30 deg (default) if distance < 1.8 units
 
 
-roslaunch fourbot rviz_gazebo.launch
-rosrun fourbot depth_node.py -- publishes distance from center of camera frame 
-rosrun fourbot movement.py -- moves forward, turns anticlockwise 30 deg (default) if distance < 1.8 units
+
+ODOM
+/fourbot/odom
+/fourbot/imu
+/fourbot/gps
+
+Sample Data >
+
+header: 
+  seq: 21549
+  stamp: 
+    secs: 2240
+    nsecs: 575000000
+  frame_id: "odom"
+child_frame_id: "robot_footprint"
+pose: 
+  pose: 
+    position: 
+      x: -3.603781907032657
+      y: -8.712173282306216
+      z: 0.0
+    orientation: 
+      x: -3.9998267267744516e-07
+      y: 1.0721680793585594e-08
+      z: 0.9798848351509343
+      w: 0.1995637989242201
+  covariance: [0.0001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
+twist: 
+  twist: 
+    linear: 
+      x: -2.2812691466686442e-08
+      y: 4.320901034244061e-11
+      z: 0.0
+    angular: 
+      x: 0.0
+      y: 0.0
+      z: -1.972875243643067e-11
+  covariance: [0.0001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000000000000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
+---
