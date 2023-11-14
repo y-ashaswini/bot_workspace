@@ -5,7 +5,7 @@
 	<!-- Robot pose -->
 	<arg name="x" default="0" />
 	<arg name="y" default="0" />
-	<arg name="z" default="0" />
+	<arg name="z" default="0.8" />
 	<arg name="roll" default="0" />
 	<arg name="pitch" default="0" />
 	<arg name="yaw" default="0" />
@@ -15,8 +15,9 @@
 	<include file="$(find fourbot)/launch/robot_description.launch" />
 
 	<!-- World File -->
-	<arg name="world_file" default="$(find fourbot)/worlds/empty.world" />
+	<!-- <arg name="world_file" default="$(find fourbot)/worlds/empty.world" /> -->
 	<!-- <arg name="world_file" default="$(find fourbot)/worlds/arrows.world" /> -->
+	<arg name="world_file" default="$(find fourbot)/worlds/mars_noarrows.world" />
 	
 
 	<!-- Launch Gazebo World -->
@@ -29,19 +30,29 @@
 	</include>
 
 
-	<!-- spawn the robot using arguments in this vidoe -->
+	<!-- spawn the robot using arguments -->
 	<node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
 		args="-urdf -param robot_description -model fourbot
 			  -x $(arg x) -y $(arg y) -z $(arg z)
 			  -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)" />
 
 	<!--launch rviz-->
-	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
-		args="-d $(find fourbot)/worlds/ouster_lidar.rviz" />	
+	<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false"
+		args="-d $(find fourbot)/worlds/ouster_lidar.rviz" />	 -->
 
 	<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" /> -->
 
 	<!-- rviz_config.rviz -->
 	<!-- rviz_config_depth.rviz -->
 	<!-- ouster_lidar.rviz -->
+
+
+	<!-- <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+		<rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+		<rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+		<rosparam file="$(find fourbot)/config/local_costmap_params.yaml" command="load" />
+		<rosparam file="$(find fourbot)/config/global_costmap_params.yaml" command="load" /> 
+		<rosparam file="$(find fourbot)/config/base_local_planner_params.yaml" command="load" />
+	</node>	 -->
+
 </launch>
