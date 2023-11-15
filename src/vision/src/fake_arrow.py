@@ -4,13 +4,13 @@ import rospy
 import cv2
 import numpy as np
 from std_msgs.msg import String
-from sensor_msgs.msg import Image
+from sensor_msgs.msg import PointCloud2
 # from cv_bridge import CvBridge, CvBridgeError
 
 
 class camera1:
     def __init__(self):
-        self.img_subscriber = rospy.Subscriber("/depthcam/color/image_raw", Image, self.img_sub_callback)
+        self.img_subscriber = rospy.Subscriber("/fourbot/os1_cloud_node/points", PointCloud2, self.img_sub_callback)
         self.direction_publisher = rospy.Publisher("/arrow", String, queue_size=1)
         self.arrow_q =['x','left','x','right','x']
         self.arrow_index = 0

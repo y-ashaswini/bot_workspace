@@ -67,7 +67,7 @@
   </gazebo> -->
 
   <!-- hokuyo LASER -->
-  <gazebo reference="hokuyo">
+  <!-- <gazebo reference="hokuyo">
     <sensor type="ray" name="head_hokuyo_sensor">
       <pose>0 0 0 0 0 0</pose>
       <visualize>true</visualize>
@@ -95,9 +95,10 @@
       <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
         <topicName>/scan</topicName>
         <frameName>hokuyo</frameName>
+        <robotNamespace>/fourbot</robotNamespace>
       </plugin>
     </sensor>
-  </gazebo>
+  </gazebo> -->
 
 
   <!-- Depth Sensor Plugin -->
@@ -143,13 +144,70 @@
     </sensor>
   </gazebo> -->
 
+  <!-- Ouster 3D Lidar -->
+  <!-- <gazebo reference="ouster_lidar">
+    <sensor type="ray" name="ouster_lidar">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <vertical>
+          <samples>64</samples>
+          <resolution>1</resolution>
+          <min_angle>${-16.6*3.1415926535897931/180.0}</min_angle>
+          <max_angle>${16.6*3.1415926535897931/180.0}</max_angle>
+          </vertical>
+          <horizontal>
+          <samples>512</samples>
+          <resolution>1</resolution>
+          <min_angle>-3.1415926535897931</min_angle>
+          <max_angle>3.1415926535897931</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+            <min>0.8</min>
+            <max>100</max>
+            <resolution>0.03</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.000000000001</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_ouster_laser.so">
+        <topicName>os1_cloud_node/points</topicName>
+        <frameName>ouster_lidar</frameName>
+        <min_range>0.8</min_range>
+        <max_range>100</max_range>
+        <gaussianNoise>0.008</gaussianNoise>
+      </plugin>
+    </sensor>
+  </gazebo> -->
+
+   
+    <!-- Ouster 3D IMU -->
+
+    <gazebo reference="ouster_imu">
+      <sensor type="imu" name="ouster_imu_sensor">
+        <pose>0 0 0 0 0 0</pose>
+        <always_on>true</always_on>
+        <update_rate>100</update_rate>
+        <visualize>true</visualize>
+        <topic>fourbot/os1_cloud_node/imu</topic>
+      </sensor>
+    </gazebo>
+
+
 
   <!-- IMU Sensor -->
   <gazebo>
     <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <robotNamespace>/fourbot</robotNamespace>
       <alwaysOn>true</alwaysOn>
       <bodyName>robot_footprint</bodyName>
-      <topicName>/fourbot/imu</topicName>
+      <topicName>imu</topicName>
       <serviceName>imu_service</serviceName>
       <gaussianNoise>0.0</gaussianNoise>
       <updateRate>20.0</updateRate>
@@ -170,7 +228,7 @@
       <velocityDrift>0 0 0</velocityDrift>
       <velocityGaussianNoise>0.1 0.1 0.1</velocityGaussianNoise>
     </controller:hector_gazebo_ros_gps>
-  </gazebo> -->
-
+  </gazebo>
+ -->
 
 </robot>

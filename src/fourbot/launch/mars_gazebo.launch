@@ -4,7 +4,7 @@
 	<!-- Robot pose -->
 	<arg name="x" default="0" />
 	<arg name="y" default="0" />
-	<arg name="z" default="0" />
+	<arg name="z" default="1" />
 	<arg name="roll" default="0" />
 	<arg name="pitch" default="0" />
 	<arg name="yaw" default="0" />
@@ -14,9 +14,8 @@
 	<include file="$(find fourbot)/launch/robot_description.launch" />
 
 	<!-- World File -->
-	<!-- <arg name="world_file" default="$(find fourbot)/worlds/empty.world" /> -->
-	<arg name="world_file" default="$(find fourbot)/worlds/arrows.world" />
-	<!-- <arg name="world_file" default="$(find fourbot)/worlds/terrain_obstacles.world" /> -->
+	<arg name="world_file" default="$(find fourbot)/worlds/empty.world" />
+	<!-- <arg name="world_file" default="$(find fourbot)/worlds/arrows.world" /> -->
 
 	<!-- Launch Gazebo World -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -35,20 +34,17 @@
 			  -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)" />
 
 	<!--launch rviz-->
-	<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false"
-		args="-d $(find fourbot)/worlds/ouster_lidar.rviz" /> -->
+	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
+		args="-d $(find fourbot)/worlds/rviz_config_depth.rviz" />
 
 	<!-- rviz_config.rviz -->
 	<!-- rviz_config_depth.rviz -->
 
-	<!-- <node name="rviz" pkg="rviz" type="rviz" respawn="false" /> -->
-
-
-	<!-- <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 		<rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
 		<rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
 		<rosparam file="$(find fourbot)/config/local_costmap_params.yaml" command="load" />
 		<rosparam file="$(find fourbot)/config/global_costmap_params.yaml" command="load" /> 
 		<rosparam file="$(find fourbot)/config/base_local_planner_params.yaml" command="load" />
-	</node>	 -->
+	</node>		
 </launch>

@@ -202,7 +202,7 @@ class Movement():
 
 
     def forward_continuous(self):
-
+        print("moving forward")
         while not self.too_close and not self.collided:
         # while not self.collided:
             self.vel_pub.publish(self.command)
@@ -252,7 +252,7 @@ class Movement():
 
 def wrapper():
     controller = Movement()
-    controller.command.linear.x = 5
+    controller.command.linear.x = 10
     controller.command.linear.y = 2
 
     while not controller.end:
@@ -280,4 +280,3 @@ if __name__ == '__main__':
         wrapper()        
     except rospy.ROSInterruptException:
         pass
-
