@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find fourbot)/launch/temp_amcl_map.launch"/>
+    <include file="$(find fourbot)/launch/temp_movebase.launch"/>
+    <node name="estimate" pkg="fourbot" type="init_pose_estimate.py"/>
+</launch>

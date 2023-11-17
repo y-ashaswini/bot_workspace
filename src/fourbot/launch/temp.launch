@@ -34,9 +34,7 @@
 
 	<!--launch rviz-->
 	<node name="rviz" pkg="rviz" type="rviz" respawn="false"
-		args="-d $(find fourbot)/worlds/mapping.rviz" />
-        
-    <!-- <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop" /> -->
+		args="-d $(find fourbot)/worlds/trav.rviz" />
 
 </launch>
 

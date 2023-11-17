@@ -178,3 +178,65 @@ RUNNING WITH MAP + AMCL NODE
 
 PATH PLANNING - MOVEBASE
 
+http://wiki.ros.org/global_planner?distro=noetic
+
+
+- firstly, costmaps have to be initialized.
+- this can be done either by providing the static map from map_server node or by providing a fixed width and height of the region
+- global planner: creating long-term plans over the entire environment
+- local planner: creates short term plans, taking into account the obstacle information in the environment
+- for via map (and without map?), must use with amcl_node to give it info about obstacles
+- the navigation stack uses information from sensors to avoid obstacles in the world, it assumes that these sensors are publishing either sensor_msgs/LaserScan or sensor_msgs/PointCloud messages over ROS
+
+
+- set parameters for move_base node in yaml files
+- separate costmap params for local and global, and 1 with params common to both
+
+
+> roslaunch fourbot temp.launch (gazebo + rviz)
+> roslaunch fourbot temp_trav_combined.launch (map server + amcl, movebase)
+
+move base topics:
+
+/move_base/NavfnROS/plan
+/move_base/TrajectoryPlannerROS/cost_cloud
+/move_base/TrajectoryPlannerROS/global_plan
+/move_base/TrajectoryPlannerROS/local_plan
+/move_base/TrajectoryPlannerROS/parameter_descriptions
+/move_base/TrajectoryPlannerROS/parameter_updates
+/move_base/cancel
+/move_base/current_goal
+/move_base/feedback
+/move_base/global_costmap/costmap
+/move_base/global_costmap/costmap_updates
+/move_base/global_costmap/footprint
+/move_base/global_costmap/inflation_layer/parameter_descriptions
+/move_base/global_costmap/inflation_layer/parameter_updates
+/move_base/global_costmap/obstacle_layer/parameter_descriptions
+/move_base/global_costmap/obstacle_layer/parameter_updates
+/move_base/global_costmap/parameter_descriptions
+/move_base/global_costmap/parameter_updates
+/move_base/global_costmap/static_layer/parameter_descriptions
+/move_base/global_costmap/static_layer/parameter_updates
+/move_base/goal
+/move_base/local_costmap/costmap
+/move_base/local_costmap/costmap_updates
+/move_base/local_costmap/footprint
+/move_base/local_costmap/inflation_layer/parameter_descriptions
+/move_base/local_costmap/inflation_layer/parameter_updates
+/move_base/local_costmap/obstacle_layer/parameter_descriptions
+/move_base/local_costmap/obstacle_layer/parameter_updates
+/move_base/local_costmap/parameter_descriptions
+/move_base/local_costmap/parameter_updates
+/move_base/parameter_descriptions
+/move_base/parameter_updates
+/move_base/recovery_status
+/move_base/result
+/move_base/status
+/move_base_simple/goal
+
+
+this is WITH A MAP CURRENTLY. need to do one without a map.
+
+
+
