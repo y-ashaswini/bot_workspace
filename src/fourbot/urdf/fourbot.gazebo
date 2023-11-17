@@ -153,6 +153,7 @@
       <serviceName>imu_service</serviceName>
       <gaussianNoise>0.0</gaussianNoise>
       <updateRate>20.0</updateRate>
+      <frameName>chassis</frameName>
     </plugin>
   </gazebo>
 

@@ -14,7 +14,7 @@
 	<include file="$(find fourbot)/launch/robot_description.launch" />
 
 	<!-- World File -->
-	<arg name="world_file" default="$(find fourbot)/worlds/empty.world" />
+	<arg name="world_file" default="$(find fourbot)/worlds/obstacle_course.world" />
 
 	<!-- Launch Gazebo World -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -42,6 +42,5 @@
 
 
 <!--
-    RUN THIS COMMAND for keyboard traversal
     rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/fourbot/cmd_vel
 -->
