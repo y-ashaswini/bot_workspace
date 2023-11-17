@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <launch>
-
+<!-- 
   <arg name="base_global_planner" default="navfn/NavfnROS"/>
-  <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/>
+  <arg name="base_local_planner" default="base_local_planner/TrajectoryPlannerROS"/> -->
+  <arg name="cmd_vel_topic" default="/fourbot/cmd_vel"/>
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
-    <param name="base_global_planner" value="$(arg base_global_planner)"/>
+    <!-- <param name="base_global_planner" value="$(arg base_global_planner)"/>
     <param name="base_local_planner" value="$(arg base_local_planner)"/>  
     <param name="recovery_behavior_enabled" value="true"/>
-    <param name="controller_frequency" value="1.0"/>
+    <param name="controller_frequency" value="1.0"/> -->
 
     <rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find fourbot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
@@ -17,7 +18,7 @@
     <rosparam file="$(find fourbot)/config/global_costmap_params.yaml" command="load" />
     <rosparam file="$(find fourbot)/config/base_local_planner_params.yaml" command="load" />
 
-    <remap from="cmd_vel" to="/fourbot/cmd_vel"/>
+    <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
   </node>
 
 </launch>

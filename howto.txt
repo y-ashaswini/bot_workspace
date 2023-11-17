@@ -194,7 +194,7 @@ http://wiki.ros.org/global_planner?distro=noetic
 
 
 > roslaunch fourbot temp.launch (gazebo + rviz)
-> roslaunch fourbot temp_trav_combined.launch (map server + amcl, movebase)
+> roslaunch fourbot temp_trav_combined.launch (map server + amcl, movebase) --- WHEN NO MAP
 
 move base topics:
 
@@ -238,5 +238,5 @@ move base topics:
 
 this is WITH A MAP CURRENTLY. need to do one without a map.
 
-
+WITHOUT A MAP
 
