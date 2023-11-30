@@ -1,20 +1,19 @@
 <launch>
-
-    <!-- <arg name="use_map_topic" default="false"/> -->
+    <arg name="use_map_topic" default="true"/>
     <arg name="scan_topic" default="/scan" />
     <arg name="initial_pose_x" default="0.0" />
     <arg name="initial_pose_y" default="0.0" />
     <arg name="initial_pose_a" default="0.0" />
   ​
     <node pkg="amcl" type="amcl" name="amcl">
-      <!-- <param name="use_map_topic" value="$(arg use_map_topic)"/> -->
+      <param name="use_map_topic" value="$(arg use_map_topic)"/>
 
       <!-- Publish scans from best pose at a max of 10 Hz -->
       <param name="odom_model_type" value="omni-corrected"/>
       <param name="odom_alpha1" value="0.005"/>
       <param name="odom_alpha2" value="0.0.005"/>
 
-      <!-- translation variance, m -->
+      <!-- translation variance -->
       <param name="odom_alpha3" value="0.01"/>
       <param name="odom_alpha4" value="0.005"/>
       <param name="odom_alpha5" value="0.003"/>
@@ -32,6 +31,8 @@
       <param name="laser_sigma_hit" value="0.2"/>
       <param name="laser_lambda_short" value="0.1"/>
       <param name="laser_model_type" value="likelihood_field"/>
+
+      <param name="use_sim_time" value="true"/>
 
       <!-- <param name="laser_model_type" value="beam"/> -->
       <param name="laser_likelihood_max_dist" value="2.0"/>

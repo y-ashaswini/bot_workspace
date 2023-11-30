@@ -2,7 +2,6 @@
 
 import rospy
 import cv2
-import numpy as np
 from std_msgs.msg import String
 from sensor_msgs.msg import PointCloud2
 # from cv_bridge import CvBridge, CvBridgeError

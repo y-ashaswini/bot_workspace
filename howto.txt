@@ -238,5 +238,20 @@ move base topics:
 
 this is WITH A MAP CURRENTLY. need to do one without a map.
 
+----------------------------------------------------------------
+
 WITHOUT A MAP
 
+- fourbot
+- gmapping
+- amcl
+- movebase
+
+> roslaunch movebase_combined.launch
+only works when you run that script that publishes move_base goals too - uses dwa, dijkstra, and works! WEEE.
+> cd onbot_ws/src/simple_navigation_goals/src
+> ./simple_navigation_goals.py (made a script launch.launch but cannot see logs for some reason idk why)
+
+----------------------------------------------------------------
+
+ADDING CUSTOM ALGORIHTMS TO TRAVERSAL WITHOUT MAP
