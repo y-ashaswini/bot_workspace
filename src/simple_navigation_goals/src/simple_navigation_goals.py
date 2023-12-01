@@ -7,8 +7,10 @@ from geometry_msgs.msg import Twist
 
 class setGoal:
     def __init__(self):
-        rospy.on_shutdown(self.shutdownhook)
         self.command = Twist()
+        self.reached = False
+        self.stuck = False
+
         self.vel_pub = rospy.Publisher('/fourbot/cmd_vel', Twist, queue_size=1)
         self.rate = rospy.Rate(10)
         self.start = rospy.Time.now().secs
@@ -21,56 +23,52 @@ class setGoal:
         self.goal = MoveBaseGoal()
         self.goal.target_pose.header.frame_id = 'map'
 
-        
-        self.reset()
-        wait = self.ac.wait_for_result()
-        if not wait:
-            rospy.logerr("Action server not available!")
-            rospy.signal_shutdown("Action server shutting down...")
-        else:
-            rospy.loginfo("Goal execution complete!")
-            # self.rate.sleep()
-        
+        while self.reached == False:
+            self.reset_goal()
+            wait = self.ac.wait_for_result()
+            if not wait:
+                rospy.logerr("Action server not available!")
+                rospy.signal_shutdown("Action server shutting down...")
+            else:
+                rospy.loginfo("Goal execution complete!")
+                self.reached = True
+            
         self.stop_rover()
 
-    def reset(self):
+    def reset_goal(self):
         # Send a goal to the robot to move 3 meter forward  
         self.goal.target_pose.header.stamp = rospy.Time.now()
         self.goal.target_pose.pose.position.x = 3.0
         self.goal.target_pose.pose.orientation.w = 1.0
 
-        rospy.loginfo("Sending goal")
+        rospy.loginfo("Sending goal...")
         self.ac.send_goal(self.goal)
 
 
     def stop_rover(self):
-        rospy.loginfo("Shutting down rover!")
         self.command.linear.x = 0.0
         self.command.linear.y = 0.0 
         self.command.linear.z = 0.0 
         self.command.angular.x = 0.0
         self.command.angular.y = 0.0
         self.command.angular.z = 0.0
+        rospy.signal_shutdown("Shutting down rover!")
         
-        self.rate.sleep()
-        
-
 
 def main():
-    f = setGoal()
+    setGoal()
     try:
         rospy.spin()
     except KeyboardInterrupt:
-        rospy.loginfo("Shutting down")
-        f.stop_rover()
+        rospy.loginfo("Keyboard interrupt, shutting down")
 
 
 if __name__ == "__main__":
     try:
         rospy.init_node('movebase_client')
         main()
-        rospy.loginfo("Navigation function complete! Shutting down.")
+        rospy.loginfo("Navigation function complete!")
     except rospy.ROSInterruptException:
-        rospy.loginfo("Navigation function complete! Shutting down.")
+        rospy.loginfo("ROS Exception, shutting down.")
 
 

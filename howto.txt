@@ -240,7 +240,8 @@ this is WITH A MAP CURRENTLY. need to do one without a map.
 
 ----------------------------------------------------------------
 
-WITHOUT A MAP
+
+WITHOUT A MAP - DONE
 
 - fourbot
 - gmapping
@@ -254,4 +255,24 @@ only works when you run that script that publishes move_base goals too - uses dw
 
 ----------------------------------------------------------------
 
-ADDING CUSTOM ALGORIHTMS TO TRAVERSAL WITHOUT MAP
+TODO
+
+* recovery behavior - move to last safe position (how?)
+* keep moving forward (or wherever optimal position) until goal reached - custom script - in progress
+* add depthcam (simulate intel realsense)
+* integrate arrow detection algorithm into it
+* make a document on how to do all this on a real bot
+  (
+    > how to communicate with wheel encoders?
+    > gps and imu - kalman filter - implementation?
+    > realsense drivers?
+    > without simulation, how control, observe?
+    > also, how to send data from ros to the gcs website?
+  )
+
+
+realsense d435 ros plugin:
+https://github.com/pal-robotics/realsense_gazebo_plugin - plugin usage(?) on github
+http://wiki.ros.org/realsense2_camera - roswiki page
+https://github.com/IntelRealSense/realsense-ros/tree/ros1-legacy - installation instructions (for ros 1)
+

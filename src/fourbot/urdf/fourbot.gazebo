@@ -159,7 +159,7 @@
 
 
   <!-- GPS Sensor -->
-  <!-- <gazebo>      
+  <!-- <gazebo>
     <controller:hector_gazebo_ros_gps name="quadrotor_gps_sim" plugin="libhector_gazebo_ros_test.so">
       <alwaysOn>true</alwaysOn>
       <updateRate>4.0</updateRate>
