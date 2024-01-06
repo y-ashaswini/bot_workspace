@@ -248,7 +248,7 @@ WITHOUT A MAP - DONE
 - amcl
 - movebase
 
-> roslaunch movebase_combined.launch
+> roslaunch fourbot movebase_combined.launch
 only works when you run that script that publishes move_base goals too - uses dwa, dijkstra, and works! WEEE.
 > cd onbot_ws/src/simple_navigation_goals/src
 > ./simple_navigation_goals.py (made a script launch.launch but cannot see logs for some reason idk why)
@@ -276,3 +276,6 @@ https://github.com/pal-robotics/realsense_gazebo_plugin - plugin usage(?) on git
 http://wiki.ros.org/realsense2_camera - roswiki page
 https://github.com/IntelRealSense/realsense-ros/tree/ros1-legacy - installation instructions (for ros 1)
 
+----------------------------------------------------------------
+
+https://github.com/MarkNaeem/move_base_sequence/blob/main/src/server.py

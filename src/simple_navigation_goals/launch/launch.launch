@@ -2,4 +2,5 @@
 
 <launch>
     <node pkg="simple_navigation_goals" type="simple_navigation_goals.py" name="simple_navigation_goals" />
+    <!-- <node pkg="simple_navigation_goals" type="simple_navigation_goals.cpp" name="simple_navigation_goals" /> -->
 </launch>

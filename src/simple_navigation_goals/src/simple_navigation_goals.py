@@ -3,7 +3,7 @@
 import rospy
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from actionlib import SimpleActionClient
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, PointStamped
 
 class setGoal:
     def __init__(self):
@@ -17,7 +17,11 @@ class setGoal:
         rospy.loginfo("waiting for the server...")
 
         # Tell the action client that we want to spin a thread by default
-        self.ac = SimpleActionClient('move_base', MoveBaseAction)
+        self.ac = SimpleActionClient('/move_base', MoveBaseAction)
+
+
+        # ps = PointStamped(point=point_wrt_kinect)
+        # pose_transformed = tf2_geometry_msgs.do_transform_point(ps, transform)
 
         self.ac.wait_for_server()
         self.goal = MoveBaseGoal()
@@ -36,12 +40,14 @@ class setGoal:
         self.stop_rover()
 
     def reset_goal(self):
-        # Send a goal to the robot to move 3 meter forward  
+        # Send a goal to the robot to move 3 meter forward
+        self.goal.target_pose.header.frame_id = 'map'
         self.goal.target_pose.header.stamp = rospy.Time.now()
-        self.goal.target_pose.pose.position.x = 3.0
+        self.goal.target_pose.pose.position.x = 6.0
         self.goal.target_pose.pose.orientation.w = 1.0
+        # self.goal.target_pose.pose.orientation.w = self.goal.target_pose.pose.position.w + 1.0
 
-        rospy.loginfo("Sending goal...")
+        rospy.loginfo("Resetting goal...")
         self.ac.send_goal(self.goal)
 
 
